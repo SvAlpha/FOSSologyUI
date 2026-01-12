@@ -223,12 +223,20 @@ export default function HomeClient() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
+                  <img src="https://avatars.githubusercontent.com/u/201190492?v=4" alt="My_profile" 
+                  className="w-24 h-24 rounded-full border-4 border-white shadow-lg"/>
                     <p className="text-sm text-gray-700">
                         Status: <strong>Ready for Action</strong> 🚀
                     </p>
                     <p className="text-xs text-gray-500 mt-2">
                         Currently rewriting the UI for GSoC 2026.
                     </p>
+                    <Button 
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        onClick={() => alert("Connecting to Developer...")}
+                    >
+                        Contact Developer
+                    </Button>
                 </CardContent>
             </Card>
 
