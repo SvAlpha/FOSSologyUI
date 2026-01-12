@@ -120,10 +120,13 @@ export default function HomeClient() {
           </ul>
         </div>
 
-        {/* Right: Login Form */}
+        {/* Right: Login Form & Profile Card */}
         {!isAuth() && (
-          <Card className="bg-[#F6F6F6] p-6 w-full max-w-md border-0">
-            <CardHeader className="p-0 pb-0">
+          <div className="flex flex-col gap-6 w-full max-w-md">
+            
+            {/* CARD 1: The Original Login Form */}
+            <Card className="bg-[#F6F6F6] p-6 w-full border-0">
+              <CardHeader className="p-0 pb-0">
                 <CardTitle className="text-2xl font-bold text-[#101010]">
                   Log in to your account
                 </CardTitle>
@@ -133,84 +136,103 @@ export default function HomeClient() {
                 <p className="text-sm font-normal text-[#101010] mt-2">
                   This login uses HTTP, so passwords are transmitted in plain text. This is not a secure connection.
                 </p>
-            </CardHeader>
+              </CardHeader>
 
-            <CardContent className="p-0 pt-2 space-y-6">
-            {showError && (
-              <div className="mb-4">
-                <Alert
-                  variant="destructive"
-                  className="flex items-start gap-3 bg-[#FFEBEE] rounded-[4px] border-0"
-                >
-                  <img
-                    src="/assets/icons/Alert/ErrorFilled.svg"
-                    alt="Error"
-                    width={24}
-                    height={24}
-                    className="mt-1"
-                  />
-                  <div>
-                    <AlertTitle className="text-base font-semibold text-[#A41411]">
-                      An error occurred
-                    </AlertTitle>
-                    <AlertDescription className="text-sm text-[#A41411]">
-                      {errorMessage}
-                    </AlertDescription>
+              <CardContent className="p-0 pt-2 space-y-6">
+                {showError && (
+                  <div className="mb-4">
+                    <Alert
+                      variant="destructive"
+                      className="flex items-start gap-3 bg-[#FFEBEE] rounded-[4px] border-0"
+                    >
+                      <img
+                        src="/assets/icons/Alert/ErrorFilled.svg"
+                        alt="Error"
+                        width={24}
+                        height={24}
+                        className="mt-1"
+                      />
+                      <div>
+                        <AlertTitle className="text-base font-semibold text-[#A41411]">
+                          An error occurred
+                        </AlertTitle>
+                        <AlertDescription className="text-sm text-[#A41411]">
+                          {errorMessage}
+                        </AlertDescription>
+                      </div>
+                    </Alert>
                   </div>
-                </Alert>
-              </div>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="username" className="block text-base font-normal text-[#101010] mb-1">
-                  Username
-                </label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="Enter username"
-                  value={username}
-                  onChange={handleChange("username")}
-                  disabled={loading}
-                />
+                )}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="username" className="block text-base font-normal text-[#101010] mb-1">
+                      Username
+                    </label>
+                    <Input
+                      id="username"
+                      type="text"
+                      placeholder="Enter username"
+                      value={username}
+                      onChange={handleChange("username")}
+                      disabled={loading}
+                    />
+                  </div>
 
-              </div>
+                  <div>
+                    <label htmlFor="password" className="block text-base font-normal text-[#101010] mb-1">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={handleChange("password")}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute inset-y-0 right-2 flex items-center text-gray-500"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                  </div>
 
-              <div>
-                <label htmlFor="password" className="block text-base font-normal text-[#101010] mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={handleChange("password")}
-                  />
-
-
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-2 flex items-center text-gray-500"
-                    tabIndex={-1}
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-10 bg-[#004494] text-base text-white rounded-[4px] hover:bg-[#003377]"
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
+                    {loading ? "Logging in..." : "Login"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
 
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full h-10 bg-[#004494] text-base text-white rounded-[4px] hover:bg-[#003377]"
-              >
-                {loading ? "Logging in..." : "Login"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            {/* CARD 2: YOUR NEW GSoC PROFILE (The Clone) */}
+            <Card className="bg-blue-50 p-6 w-full border-2 border-blue-200">
+                <CardHeader className="p-0 pb-2">
+                    <CardTitle className="text-xl font-bold text-blue-800">
+                        GSoC Developer
+                    </CardTitle>
+                    <CardDescription className="text-blue-600 font-semibold">
+                       Jayant Dhakad
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <p className="text-sm text-gray-700">
+                        Status: <strong>Ready for Action</strong> 🚀
+                    </p>
+                    <p className="text-xs text-gray-500 mt-2">
+                        Currently rewriting the UI for GSoC 2026.
+                    </p>
+                </CardContent>
+            </Card>
+
+          </div>
         )}
       </div>
     </div>

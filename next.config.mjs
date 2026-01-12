@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
-    output: 'standalone',
-    typescript: {
-        ignoreBuildErrors: true,
-    },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://127.0.0.1:8081/repo/api/v1/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
