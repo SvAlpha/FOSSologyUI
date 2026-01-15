@@ -43,12 +43,10 @@ import { getUserSelf } from '@/services/users';
 import { fetchAllGroups } from '@/services/groups';
 import routes from '@/constants/routes';
 import { isAuth } from '@/shared/authHelper';
-
+import DeveloperCard from '@/components/DeveloperCard';
 export default function HomeClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [githubData,setGithubData]=useState(null);
-  const[loadingProfile,setLoadingProfile]=useState(null);
   const [values, setValues] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -85,23 +83,6 @@ export default function HomeClient() {
   }, [searchParams, router]);
 
   const [showPassword, setShowPassword] = useState(false)
-useEffect(() => {
-    // This function talks to GitHub
-    const fetchGithubProfile = async () => {
-      try {
-        // REPLACE 'jayantdhakad' with your actual GitHub username if different
-        const response = await fetch('https://api.github.com/users/SvAlpha');
-        const data = await response.json();
-        setGithubData(data); // Put the data in the bucket
-        setLoadingProfile(false);
-      } catch (error) {
-        console.error("Error fetching GitHub profile:", error);
-        setLoadingProfile(false);
-      }
-    };
-
-    fetchGithubProfile();
-  }, []); // <--- THE IMPORTANT PART. The empty [] means "Run only once".
   return (
     <div className="min-h-screen bg-white py-10 text-gray-800 mx-8">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-12">
@@ -230,42 +211,7 @@ useEffect(() => {
             </Card>
 
             {/* CARD 2: YOUR NEW GSoC PROFILE (The Clone) */}
-            <Card className="bg-blue-50 p-6 w-full border-2 border-blue-200">
-                <CardHeader className="p-0 pb-2">
-                    <CardTitle className="text-xl font-bold text-blue-800">
-                        GSoC Developer
-                    </CardTitle>
-                    <CardDescription className="text-blue-600 font-semibold">
-                       {githubData ? githubData.name : "loading...."}
-                    </CardDescription>
-                </CardHeader>
-               <CardContent className="p-0 pt-4 flex flex-col items-center gap-4">
-                    {/* AVATAR */}
-                    <img 
-                        src={githubData ? githubData.avatar_url : "https://github.com/identicons/jasonlong.png"} 
-                        alt="Profile"
-                        className="w-24 h-24 rounded-full border-4 border-white shadow-lg"
-                    />
-                    
-                    <div className="text-center">
-                        <p className="text-sm text-gray-700">
-                           {/* Show public repos count */}
-                            Public Repos: <strong>{githubData ? githubData.public_repos : 0}</strong> 🚀
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                            {githubData ? githubData.bio : "Fetching bio..."}
-                        </p>
-                    </div>
-
-                    <Button 
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                        onClick={() => window.open(githubData.html_url, '_blank')}
-                    >
-                        Visit GitHub Profile
-                    </Button>
-                </CardContent>
-            </Card>
-
+           <DeveloperCard/>
           </div>
         )}
       </div>
