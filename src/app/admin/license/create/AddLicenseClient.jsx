@@ -58,7 +58,6 @@ const AddLicensePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Submit formData via API here
-    console.log("Submitted:", formData);
   };
 
   return (

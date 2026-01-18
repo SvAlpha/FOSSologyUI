@@ -27,12 +27,10 @@ const OneShotAnalysisPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Add file handling and real-time license analysis logic here
-    console.log("Analyze button clicked");
   };
 
   const handleChange = (e) => {
     // TODO: Handle file input change here
-    console.log("Selected file:", e.target.files[0]);
   };
 
   return (
