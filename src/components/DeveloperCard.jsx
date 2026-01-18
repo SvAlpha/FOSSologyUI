@@ -2,57 +2,73 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
-export default function DeveloperCard() {
+export default function DeveloperCard({ username }) {
   // 1. The State (The Bucket)
   const [githubData, setGithubData] = useState(null);
 
   // 2. The Effect (The Fetcher)
   useEffect(() => {
+    if (!username) return;
+
     const fetchGithubProfile = async () => {
       try {
-        const response = await fetch('https://api.github.com/users/SvAlpha');
+        // FIXED: Using the dynamic prop instead of hardcoded string
+        const response = await fetch(`https://api.github.com/users/${username}`);
         const data = await response.json();
         setGithubData(data);
       } catch (error) {
         console.error("Error fetching profile:", error);
       }
     };
+    
     fetchGithubProfile();
-  }, []);
+    // REMOVED ILLEGAL RETURN FROM HERE
+  }, [username]);
 
-  // 3. The UI (The Render)
+
+  // 3. The Loading State (Placed CORRECTLY in the main body)
+  if (!githubData) {
+      return (
+        <Card className="bg-gray-50 p-6 w-full border border-gray-200 animate-pulse mb-4">
+            <p className="text-center text-gray-400">Loading {username}...</p>
+        </Card>
+      );
+  }
+
+  // 4. The Final UI (The Render)
   return (
-    <Card className="bg-blue-50 p-6 w-full border-2 border-blue-200">
+    <Card className="bg-white p-6 w-full border border-gray-200 shadow-sm mb-4">
         <CardHeader className="p-0 pb-2">
-            <CardTitle className="text-xl font-bold text-blue-800">
-                GSoC Developer
+            <CardTitle className="text-lg font-bold text-gray-800">
+                Dev Profile
             </CardTitle>
-            <CardDescription className="text-blue-600 font-semibold">
-               {githubData ? githubData.name : "Loading..."}
+            <CardDescription className="text-blue-600 font-medium">
+               {githubData.name || username}
             </CardDescription>
         </CardHeader>
 
         <CardContent className="p-0 pt-4 flex flex-col items-center gap-4">
             <img 
-                src={githubData ? githubData.avatar_url : "https://github.com/identicons/jasonlong.png"} 
+                src={githubData.avatar_url} 
                 alt="Profile"
-                className="w-24 h-24 rounded-full border-4 border-white shadow-lg"
+                className="w-20 h-20 rounded-full border-2 border-gray-100"
             />
             
             <div className="text-center">
                 <p className="text-sm text-gray-700">
-                    Public Repos: <strong>{githubData ? githubData.public_repos : 0}</strong> 🚀
+                    Public Repos: <strong>{githubData.public_repos}</strong> 🚀
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
-                    {githubData ? githubData.bio : "Fetching bio..."}
+                    {githubData.bio ? githubData.bio.substring(0, 60) + "..." : "No bio available."}
                 </p>
             </div>
 
             <Button 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={() => window.open(githubData?.html_url, '_blank')}
+                variant="outline"
+                className="w-full text-xs"
+                onClick={() => window.open(githubData.html_url, '_blank')}
             >
-                Visit GitHub Profile
+                View GitHub
             </Button>
         </CardContent>
     </Card>

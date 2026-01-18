@@ -1,21 +1,3 @@
-/*
- SPDX-FileCopyrightText: 2025 Tiyasa Kundu (tiyasakundu20@gmail.com)
-
-SPDX-License-Identifier: GPL-2.0-only
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- version 2 as published by the Free Software Foundation.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License along
- with this program; if not, write to the Free Software Foundation, Inc.,
- 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-*/
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -25,34 +7,38 @@ import { cn } from "@/lib/utils"
 import { Eye, EyeOff } from "lucide-react"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Alert,
-  AlertTitle,
-  AlertDescription,
-} from '@/components/ui/alert';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card"
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+
+// Import your custom component
+import DeveloperCard from '@/components/DeveloperCard';
 
 import fetchToken from '@/services/auth';
 import { getUserSelf } from '@/services/users';
 import { fetchAllGroups } from '@/services/groups';
 import routes from '@/constants/routes';
 import { isAuth } from '@/shared/authHelper';
-import DeveloperCard from '@/components/DeveloperCard';
+
 export default function HomeClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // STATE: Form Values
   const [values, setValues] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // STATE: Mount Check (Fixes Hydration Error)
+  const [isMounted, setIsMounted] = useState(false);
 
   const { username, password } = values;
+
+  // EFFECT: Set Mounted to true once page loads
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleChange = (name) => (event) => {
     setValues({ ...values, [name]: event.target.value });
@@ -82,8 +68,11 @@ export default function HomeClient() {
     }
   }, [searchParams, router]);
 
-  const [showPassword, setShowPassword] = useState(false)
+  // Prevent Hydration Mismatch: Render nothing until mounted
+  if (!isMounted) return null;
+
   return (
+    <div>
     <div className="min-h-screen bg-white py-10 text-gray-800 mx-8">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-12">
         {/* Left: Intro Content */}
@@ -118,11 +107,11 @@ export default function HomeClient() {
           </ul>
         </div>
 
-        {/* Right: Login Form & Profile Card */}
+        {/* Right: Login Form & Developer Cards */}
         {!isAuth() && (
           <div className="flex flex-col gap-6 w-full max-w-md">
             
-            {/* CARD 1: The Original Login Form */}
+            {/* CARD 1: LOGIN FORM */}
             <Card className="bg-[#F6F6F6] p-6 w-full border-0">
               <CardHeader className="p-0 pb-0">
                 <CardTitle className="text-2xl font-bold text-[#101010]">
@@ -210,11 +199,21 @@ export default function HomeClient() {
               </CardContent>
             </Card>
 
-            {/* CARD 2: YOUR NEW GSoC PROFILE (The Clone) */}
-           <DeveloperCard/>
+            {/* CARD 2: DYNAMIC DEVELOPER PROFILES */}
+            <div className="flex flex-col gap-4">
+                <p className="text-sm font-bold text-gray-500">GSoC Candidates:</p>
+                
+                {/* 1. YOU */}
+                <DeveloperCard username="SvAlpha" />
+                
+                {/* 2. THE LEGEND (Demo of Reusability) */}
+                <DeveloperCard username="gaearon" />
+            </div>
+
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }
