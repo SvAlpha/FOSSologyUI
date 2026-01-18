@@ -69,8 +69,22 @@ const sendRequest = ({
     method,
     headers: mergedHeaders,
     body,
-  };
-  let URL = url;
+  };  
+
+// --- JAYANT'S FIX START ---
+// This cleans up the broken URL and forces it to use the local proxy
+let cleanUrl = url;
+if (url.includes("/api/")) {
+  // If the URL looks like "http://api/tokens", we grab just the "/api/tokens" part
+  const parts = url.split("/api/");
+  cleanUrl = "/api/" + parts[1];
+} else if (!url.startsWith("http") && !url.startsWith("/api")) {
+   // If it's just "tokens", we add "/api/" to the front
+   cleanUrl = "/api/" + url;
+}
+let URL = cleanUrl;
+// --- JAYANT'S FIX END ---
+
   if (body) {
     if (isMultipart) {
       options.body = body;
