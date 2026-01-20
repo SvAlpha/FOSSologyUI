@@ -74,6 +74,17 @@ export default function HomeClient() {
     }
   };
 
+  // --- BUG FIX: Auto-hide error after 5 seconds ---
+  useEffect(() => {
+    if (showError) {
+      const timer = setTimeout(() => {
+        setShowError(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showError]);
+  // ------------------------------------------------
+
   useEffect(() => {
     const message = searchParams.get('message');
     if (message) {
