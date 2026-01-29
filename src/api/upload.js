@@ -27,6 +27,7 @@ import { getToken } from "@/shared/authHelper";
 import sendRequest from "./sendRequest";
 
 // Create Uploads from File
+// Create Uploads from File
 export const createUploadApi = (
   folderId,
   uploadDescription,
@@ -49,12 +50,11 @@ export const createUploadApi = (
       uploadDescription,
       public: accessLevel,
       ignoreScm,
-      uploadType: "",
+      uploadType: "file", // <--- FIXED: Added the required type
     },
     body: formdata,
   });
 };
-
 // Create Uploads from Version Control System
 export const createUploadVcsApi = (header, body) => {
   const url = endpoints.upload.uploadCreate();
